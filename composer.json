@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": "^8",
-        "illuminate/support": "^8"
+        "illuminate/support": "^9"
     },
     "require-dev": {
         "orchestra/testbench": "^7",
@@ -29,6 +29,13 @@
     "autoload-dev": {
         "psr-4": {
             "AnthonyEdmonds\\LaravelFind\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AnthonyEdmonds\\LaravelFind\\FindServiceProvider"
+            ]
         }
     },
     "config": {
