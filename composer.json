@@ -1,0 +1,39 @@
+{
+    "name": "anthonyedmonds/laravel-find",
+    "description": "Find models within your Laravel system with minimal overhead",
+    "keywords": ["laravel", "find", "search", "query builder"],
+    "type": "library",
+    "homepage": "https://github.com/AnthonyEdmonds/laravel-find",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anthony Edmonds",
+            "email": "contact@anthonyedmonds.me",
+            "homepage": "https://anthonyedmonds.me",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8",
+        "illuminate/support": "^8"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^7",
+        "phpunit/phpunit": "^9"
+    },
+    "autoload": {
+        "psr-4": {
+            "AnthonyEdmonds\\LaravelFind\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AnthonyEdmonds\\LaravelFind\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
