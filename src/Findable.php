@@ -11,35 +11,44 @@ trait Findable
     /* Whether the model type can be found by the viewing User */
     abstract public static function canBeFoundBy(?Model $user): bool;
     
-    /* Column name of the primary identifier for the result, such as "name" */
+    /*
+     * The primary identifier for the result, which can be:
+     * A column name, such as 'title'
+     * A static description, such as '"Book"'
+     * A sentence with placeholders, such as '~title by ~author'
+     */
     abstract protected static function findLabel(): string;
     
-    /* Column name or static label of a brief description for the result, such as "type" */
+    /*
+     * A brief description of the result, which can be:
+     * A column name, such as 'description'
+     * A static description, such as '"A collection of pages"'
+     * A sentence with placeholders, such as '~genre ~page_count'
+     */
     abstract protected static function findDescription(): string;
     
     /*
-     * URL where the result can be found; use a tilde followed by a column name for value binding:
-     * https://my-site.com/users/~id => http://my-site.com/users/1
+     * The URL where the result can be found, which can be:
+     * A column name, such as 'url'
+     * A static link, such as '"https://my-site.com/users"'
+     * A sentence with placeholders, such as 'https://my-site.com/books/~book_id/~id'
      */
     abstract protected static function findLink(): string;
 
     /* The filters, orders, and groups, to be applied to the search, such as "where('name', '=', $term)" */
-    abstract protected static function findBy(Builder $query, string $term): Builder;
+    abstract protected static function findFilters(Builder $query, string $term): Builder;
     
     /* Build a query to find a specific model of this type */
     public static function find(string $term): Builder
     {
-        // TODO Link ~id replacement
-        // TODO Allow array from label / description?
-        
         $query = DB::table(static::tableName())
             ->select([
-                static::findLabel() . ' AS label',
-                static::findDescription() . ' AS description',
-                static::findLink() . ' AS link',
+                DB::raw(static::replacePlaceholders(static::findLabel(), '~', ' ') . ' AS label'),
+                DB::raw(static::replacePlaceholders(static::findDescription(), '~', ' ') . ' AS description'),
+                DB::raw(static::replacePlaceholders(static::findLink(), '~', '/') . ' AS link'),
             ]);
         
-        return static::findBy($query, $term);
+        return static::findFilters($query, $term);
     }
     
     /* Get the table name of the current model */
@@ -47,5 +56,65 @@ trait Findable
     {
         $model = new static();
         return $model->getTable();
+    }
+
+    /* Replace link placeholders */
+    protected static function replacePlaceholders(
+        string $link,
+        string $startToken,
+        string $endToken
+    ): string {
+        $placeholders = static::findPlaceholders($link, $startToken, $endToken);
+        $sql = '';
+
+        if (empty($placeholders) !== false) {
+            return $link;
+        }
+
+        foreach ($placeholders as $index => $placeholder) {
+            $sql = 'REPLACE(' . $sql;
+
+            $index === 0
+                ? $sql .= '"'.$link.'",'
+                : $sql .= ',';
+
+            $sql .= '"'.$placeholder.'",';
+            $sql .= '"'.substr($placeholder, 1).'"';
+
+            $sql .= ')';
+        }
+
+        return $sql;
+    }
+
+    /* Find all placeholders within a string */
+    protected static function findPlaceholders(
+        string $haystack,
+        string $startToken,
+        string $endToken
+    ): array {
+        $cursor = 0;
+        $placeholders = [];
+
+        if (str_contains($haystack, $startToken) !== true) {
+            return $placeholders;
+        }
+
+        while ($cursor !== false) {
+            $cursor = strpos($haystack, $startToken, $cursor);
+            $endIndex = strpos($haystack, $endToken, $cursor);
+
+            $placeholders[] = substr(
+                $haystack,
+                $cursor,
+                $endIndex !== false
+                    ? ($endIndex - $cursor)
+                    : null
+            );
+
+            $cursor = $endIndex;
+        }
+
+        return $placeholders;
     }
 }

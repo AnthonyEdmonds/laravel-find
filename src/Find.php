@@ -12,15 +12,16 @@ class Find
     /* Perform a search for a term */
     public static function find(string $term, string $modelClass): Builder
     {
-        $modelsAllowed = array_keys(self::types());
-        
+        $anythingKey = config('laravel-find.anything-key');
+        $modelsAllowed = self::types();
+
         if (array_key_exists($modelClass, $modelsAllowed) === false) {
-            $key = substr($modelClass, strrpos($modelClass, '\\'));
+            $key = substr($modelClass, strrpos($modelClass, '\\') + 1);
             throw new AuthorizationException("You do not have permission to find a $key");
         }
 
-        return $modelClass === config('laravel-find.anything-key')
-            ? self::findAnything($term, $modelsAllowed)
+        return $modelClass === $anythingKey
+            ? self::findAnything($term, $modelsAllowed, $anythingKey)
             : $modelClass::find($term);
     }
     
@@ -58,11 +59,12 @@ class Find
     }
     
     /* Find results from any of the provided models */
-    protected static function findAnything(string $term, array $modelsAllowed): Builder
+    protected static function findAnything(string $term, array $modelsAllowed, string $anythingKey): Builder
     {
         $query = self::baseQuery();
+        unset($modelsAllowed[$anythingKey]);
         
-        foreach ($modelsAllowed as $modelClass) {
+        foreach ($modelsAllowed as $modelClass => $label) {
             $query->unionAll(
                 $modelClass::find($term)
             );

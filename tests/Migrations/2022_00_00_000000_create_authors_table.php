@@ -8,7 +8,6 @@ class CreateAuthorsTable extends Migration
 {
     public function up(): void
     {
-        dd(1);
         Schema::create('authors', function (Blueprint $table) {
             $table->tinyIncrements('id');
             $table->timestamps();

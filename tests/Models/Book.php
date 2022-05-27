@@ -3,12 +3,18 @@
 namespace AnthonyEdmonds\LaravelFind\Tests\Models;
 
 use AnthonyEdmonds\LaravelFind\Findable;
+use AnthonyEdmonds\LaravelFind\Tests\Factories\BookFactory;
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
     use Findable;
+    use HasFactory;
 
     protected $fillable = [
         'title',
@@ -21,10 +27,27 @@ class Book extends Model
         'updated_at',
     ];
 
+    // Relationships
+    public function author(): BelongsTo
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+    public function chapters(): HasMany
+    {
+        return $this->hasMany(Chapter::class);
+    }
+
+    // Factory
+    protected static function newFactory(): Factory
+    {
+        return new BookFactory();
+    }
+
     // Laravel Find
     public static function canBeFoundBy(?Model $user): bool
     {
-        return $user->can('find_books');
+        return false;
     }
     
     protected static function findLabel(): string
@@ -34,18 +57,16 @@ class Book extends Model
 
     protected static function findDescription(): string
     {
-        return 'A page from book';
+        return '"A book"';
     }
 
     protected static function findLink(): string
     {
-        return route('pages.show', '~id');
+        return 'https://my-site.com/books/~id';
     }
 
-    protected static function findBy(Builder $query, string $term): Builder
+    protected static function findFilters(Builder $query, string $term): Builder
     {
-        return $query
-            ->where('name', '=', $term)
-            ->orWhere('name', '=', $term);
+        return $query->where('title', 'LIKE', "%$term%");
     }
 }

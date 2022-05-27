@@ -3,13 +3,18 @@
 namespace AnthonyEdmonds\LaravelFind\Tests\Models;
 
 use AnthonyEdmonds\LaravelFind\Findable;
+use AnthonyEdmonds\LaravelFind\Tests\Factories\AuthorFactory;
 use Illuminate\Contracts\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Author extends Model
 {
     use Findable;
-    
+    use HasFactory;
+
     protected $fillable = [
         'name',
     ];
@@ -20,10 +25,22 @@ class Author extends Model
         'updated_at',
     ];
 
+    // Relationships
+    public function books(): HasMany
+    {
+        return $this->hasMany(Book::class);
+    }
+
+    // Factory
+    protected static function newFactory(): Factory
+    {
+        return new AuthorFactory();
+    }
+
     // Laravel Find
     public static function canBeFoundBy(?Model $user): bool
     {
-        return $user->can('find_authors');
+        return true;
     }
     
     protected static function findLabel(): string
@@ -33,18 +50,16 @@ class Author extends Model
 
     protected static function findDescription(): string
     {
-        return 'User';
+        return '"An author"';
     }
 
     protected static function findLink(): string
     {
-        return route('users.show', '~id');
+        return 'https://my-link/~id';
     }
 
-    protected static function findBy(Builder $query, string $term): Builder
+    protected static function findFilters(Builder $query, string $term): Builder
     {
-        return $query
-            ->where('name', '=', $term)
-            ->orWhere('name', '=', $term);
+        return $query->where('name', 'LIKE', "%$term%");
     }
 }
