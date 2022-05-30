@@ -45,6 +45,11 @@ class Book extends Model
     }
 
     // Laravel Find
+    public static function findTypeLabel(): string
+    {
+        return 'Books by title, author, and chapters';
+    }
+
     public static function canBeFoundBy(?Model $user): bool
     {
         return false;
@@ -65,7 +70,7 @@ class Book extends Model
         return 'https://my-site.com/books/~id';
     }
 
-    protected static function findFilters(Builder $query, string $term): Builder
+    protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder
     {
         return $query->where('title', 'LIKE', "%$term%");
     }

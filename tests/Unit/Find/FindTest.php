@@ -37,7 +37,7 @@ class FindTest extends TestCase
 
     public function testFindsSpecificModel(): void
     {
-        $results = Find::find('bees', Chapter::class)
+        $results = Find::find('bees', 'chapters')
             ->get()
             ->pluck('label');
 
@@ -72,8 +72,8 @@ class FindTest extends TestCase
     public function testExceptionWhenDenied(): void
     {
         $this->expectException(AuthorizationException::class);
-        $this->expectExceptionMessage('You do not have permission to find a Book');
+        $this->expectExceptionMessage('You do not have permission to find books');
 
-        Find::find('unholy', Book::class);
+        Find::find('unholy', 'books');
     }
 }

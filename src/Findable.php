@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 trait Findable
 {
+    /* The display label for the Model type, such as "Authors by name and book title" */
+    abstract public static function findTypeLabel(): string;
+
     /* Whether the model type can be found by the viewing User */
     abstract public static function canBeFoundBy(?Model $user): bool;
     

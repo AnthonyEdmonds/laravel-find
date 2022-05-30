@@ -27,7 +27,7 @@ return [
     
     /* Which models can be searched for, and its display label */
     'models' => [
-        \App\Models\User::class => 'Users by name, e-mail, and role',
+        'users' => \App\Models\User::class,
     ],
 ];
 ```
@@ -50,7 +50,7 @@ Set this value to the name of a table which is guaranteed to exist in the system
 
 This list controls which Models can be found using this library.
 
-Provide an array of class names and display labels to be used.
+Each Model type to be found should be keyed with a plural label, with the Model class as the value.
 
 ## Usage
 
@@ -64,6 +64,11 @@ Each Model listed in the `models` config key must use the `Findable` trait. This
 class Author extends Model
 {
     use Findable;
+
+    public static function findDisplayLabel(): string
+    {
+        return 'Authors by name and book title';
+    }
 
     public static function canBeFoundBy(?Model $user): bool
     {
@@ -92,13 +97,19 @@ class Author extends Model
 }
 ```
 
+#### findDisplayLabel
+
+The display label for the Model type, such as "Authors by name and book title".
+
+Used primarily for generally identifying the Model, preferably with context around which terms users can find by.
+
 #### canBeFoundBy
 
-Used to determine whether the current User (or null, if not signed in) can find a type of Model.
+Used to determine whether the current user (or null, if not signed in) can find a type of Model.
 
 This logic will show or hide the entire Model type based on a `true` or `false` return.
 
-The Find helper will throw an `AuthorizationException` if a User attempts to find a Model they are not allowed to. 
+The Find helper will throw an `AuthorizationException` if a user attempts to find a Model they are not allowed to. 
 
 #### findLabel
 
@@ -140,7 +151,7 @@ protected static function findFilters(Builder $query, string $term, ?Model $user
 }
 ```
 
-You may utilise the `$user` parameter to further refine the search to the current User.
+You may utilise the `$user` parameter to further refine the search to the current user.
 
 ### Find
 
@@ -157,34 +168,35 @@ The results page should show a list of whatever was found.
 
 #### Find::find
 
-Calling `find()` will construct and return a QueryBuilder statement which is ready to be executed.
+Calling `find($term, $type)` will construct and return a QueryBuilder statement which is ready to be executed.
 
-The first parameter is the term to use during the find, and the second parameter is the Model type to find.
-
-A Model class name should be provided, or the `anything-key` for a wide find.
+* `$term` is the value to use during the find, which is passed into each Model's `find()` method
+* `$type` is the key for the specific Model type in the `models` config, or the `anything-key` to find across all allowed Models
 
 As it is a standard query, you may extend the query as required, such as adding an `order()`.
 
 Run the query using whichever QueryBuilder method you require, such as `paginate()` or `get()`.
 
 ```php
-$query = Find::find('my-term', User::class);
+$query = Find::find('my-term', 'users');
 $query->orderBy('users.name');
 $query->paginate(10);
 ```
 
 This will return a standard `Collection` object containing the results.
 
-Each result will have a `label`, `description`, and `link` key.
+Each result will have a `label`, `description`, and `link` attribute.
 
 #### Find::types
 
-Calling `types()` will return a list of Models which the current User can find.
+Calling `types()` will return a list of Models which the current user can find.
 
-This array is keyed by the Model class name with its display label as the value.
+This list can be used to populate a dropdown when starting a find to narrow the types of Models to locate, and identify the Models that the user is allowed to find.
 
-This list can be used to populate a dropdown when starting a find to narrow the types of Models to locate.
+The returned array is keyed using the keys from the config `models`.
+
+By default, the value is each Model's `findDisplayLabel()`. Passing `true` to the method will instead return the Model class. 
 
 ## Roadmap
 
-* Controller, FormRequest, routes?
+* Routes macro?

@@ -40,6 +40,11 @@ class Chapter extends Model
     }
 
     // Laravel Find
+    public static function findTypeLabel(): string
+    {
+        return 'Chapters by name, number, and book';
+    }
+
     public static function canBeFoundBy(?Model $user): bool
     {
         return true;
@@ -60,7 +65,7 @@ class Chapter extends Model
         return 'https://my-site.com/books/~book_id/~number';
     }
 
-    protected static function findFilters(Builder $query, string $term): Builder
+    protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder
     {
         return $query
             ->leftJoin('books', 'books.id', '=', 'chapters.book_id')

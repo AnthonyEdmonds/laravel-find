@@ -10,6 +10,6 @@ return [
     
     /* Which models can be searched for, and its display label */
     'models' => [
-        \App\Models\User::class => 'Users by name, e-mail, and role',
-    ],
+        'users' => \App\Models\User::class
+    ]
 ];

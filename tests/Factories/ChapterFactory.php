@@ -16,7 +16,7 @@ class ChapterFactory extends Factory
         return [
             'book_id' => Book::factory(),
             'title' => $this->faker->unique()->words(3, true),
-            'number' => $this->faker->numberBetween(0, 99),
+            'number' => $this->faker->unique()->numberBetween(0, 99),
         ];
     }
 

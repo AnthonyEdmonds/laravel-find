@@ -30,21 +30,21 @@ class TypesTest extends TestCase
 
     public function testListsFindableModels(): void
     {
-        $this->assertArrayHasKey(
-            Author::class,
-            Find::types()
+        $this->assertEquals(
+            Author::findTypeLabel(),
+            Find::types()['authors']
         );
 
-        $this->assertArrayHasKey(
-            Chapter::class,
-            Find::types()
+        $this->assertEquals(
+            Chapter::findTypeLabel(),
+            Find::types()['chapters']
         );
     }
 
     public function testDoesntListUnfindable(): void
     {
         $this->assertArrayNotHasKey(
-            Book::class,
+            'books',
             Find::types()
         );
     }

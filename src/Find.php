@@ -10,23 +10,22 @@ use Illuminate\Support\Facades\DB;
 class Find
 {
     /* Perform a search for a term */
-    public static function find(string $term, string $modelClass): Builder
+    public static function find(string $term, string $type): Builder
     {
         $anythingKey = config('laravel-find.anything-key');
-        $modelsAllowed = self::types();
+        $modelsAllowed = self::types(false);
 
-        if (array_key_exists($modelClass, $modelsAllowed) === false) {
-            $key = substr($modelClass, strrpos($modelClass, '\\') + 1);
-            throw new AuthorizationException("You do not have permission to find a $key");
+        if (array_key_exists($type, $modelsAllowed) === false) {
+            throw new AuthorizationException("You do not have permission to find $type");
         }
 
-        return $modelClass === $anythingKey
+        return $type === $anythingKey
             ? self::findAnything($term, $modelsAllowed, $anythingKey)
-            : $modelClass::find($term);
+            : $modelsAllowed[$type]::find($term);
     }
     
     /* Which models the current User can find */
-    public static function types(): array
+    public static function types(bool $labels = true): array
     {
         $anythingKey = config('laravel-find.anything-key');
         $models = config('laravel-find.models');
@@ -37,9 +36,11 @@ class Find
             $findable[$anythingKey] = config('laravel-find.anything-label');
         }
         
-        foreach ($models as $modelClass => $label) {
+        foreach ($models as $type => $modelClass) {
             if ($modelClass::canBeFoundBy($user) === true) {
-                $findable[$modelClass] = $label;
+                $findable[$type] = $labels === false
+                    ? $modelClass
+                    : $modelClass::findTypeLabel();
             }
         }
             
@@ -64,7 +65,7 @@ class Find
         $query = self::baseQuery();
         unset($modelsAllowed[$anythingKey]);
         
-        foreach ($modelsAllowed as $modelClass => $label) {
+        foreach ($modelsAllowed as $modelClass) {
             $query->unionAll(
                 $modelClass::find($term)
             );

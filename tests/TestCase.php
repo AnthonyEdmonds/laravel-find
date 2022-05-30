@@ -41,9 +41,9 @@ abstract class TestCase extends BaseTestCase
         $app['config']->set('laravel-find.base-table', 'authors');
 
         $app['config']->set('laravel-find.models', [
-            Author::class => 'Authors by name and books',
-            Book::class => 'Books by title, author, and chapters',
-            Chapter::class => 'Chapters by name, number, and book',
+            'authors' => Author::class,
+            'books' => Book::class,
+            'chapters' => Chapter::class,
         ]);
     }
 }
