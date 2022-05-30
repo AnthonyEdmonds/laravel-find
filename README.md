@@ -131,7 +131,7 @@ The filters to be applied to the search, such as `->where('name', '=', $term)`.
 As this library uses Laravel's QueryBuilder, you can use related Models to find results by performing a `leftJoin` with a matching `where` statement:
 
 ```php
-protected static function findFilters(Builder $query, string $term): Builder
+protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder
 {
     return $query
         ->leftJoin('books', 'books.id', '=', 'chapters.book_id')
@@ -139,6 +139,8 @@ protected static function findFilters(Builder $query, string $term): Builder
         ->orWhere('books.title', 'LIKE', "%$term%");
 }
 ```
+
+You may utilise the `$user` parameter to further refine the search to the current User.
 
 ### Find
 
@@ -185,5 +187,4 @@ This list can be used to populate a dropdown when starting a find to narrow the 
 
 ## Roadmap
 
-* canBeFoundBy to include some sort of record level logic, instead of blanket for entire Model class
 * Controller, FormRequest, routes?
