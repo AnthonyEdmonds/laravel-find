@@ -53,8 +53,8 @@ class Find
         return DB::table(config('laravel-find.base-table'))
             ->select([
                 DB::raw('"Label" as label'),
+                DB::raw('"Description" as description'),
                 DB::raw('"Link" as link'),
-                DB::raw('"Description" as description')
             ])
             ->whereRaw('1 = 2');
     }
