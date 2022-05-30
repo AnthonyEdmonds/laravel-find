@@ -17,7 +17,7 @@ class FindServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->publishes([
-            __DIR__.'/find-config.php' => config_path('find.php'),
+            __DIR__.'/find-config.php' => config_path('laravel-find.php'),
         ], 'laravel-find');
     }
 }
