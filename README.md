@@ -197,6 +197,19 @@ The returned array is keyed using the keys from the config `models`.
 
 By default, the value is each Model's `findDisplayLabel()`. Passing `true` to the method will instead return the Model class. 
 
+### FindRequest
+
+A Laravel FormRequest is provided for convenience called `FindRequest`.
+
+Simple use it on the controller methods for handling searches:
+
+```php
+public function results(FindRequest $request): View
+{
+    // Show results...
+}
+```
+
 ## Roadmap
 
 * Routes macro?
