@@ -83,7 +83,7 @@ trait Findable
                 : $sql .= ',';
 
             $sql .= '"'.$placeholder.'",';
-            $sql .= '"'.substr($placeholder, 1).'"';
+            $sql .= substr($placeholder, 1);
 
             $sql .= ')';
         }
