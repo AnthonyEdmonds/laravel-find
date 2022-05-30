@@ -4,6 +4,7 @@ namespace AnthonyEdmonds\LaravelFind;
 
 use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 trait Findable
@@ -36,7 +37,7 @@ trait Findable
     abstract protected static function findLink(): string;
 
     /* The to be applied to the search, such as "where('name', '=', $term)" */
-    abstract protected static function findFilters(Builder $query, string $term): Builder;
+    abstract protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder;
     
     /* Build a query to find a specific model of this type */
     public static function find(string $term): Builder
@@ -48,7 +49,7 @@ trait Findable
                 DB::raw(static::replacePlaceholders(static::findLink(), '~', '/') . ' AS link'),
             ]);
         
-        return static::findFilters($query, $term);
+        return static::findFilters($query, $term, Auth::user());
     }
     
     /* Get the table name of the current model */
