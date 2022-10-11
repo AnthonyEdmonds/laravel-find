@@ -10,7 +10,7 @@ use AnthonyEdmonds\LaravelFind\Tests\TestCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Collection;
 
-class FindTest extends TestCase
+class FindByTest extends TestCase
 {
     protected Author $author;
     protected Book $book;
@@ -37,7 +37,7 @@ class FindTest extends TestCase
 
     public function testFindsSpecificModel(): void
     {
-        $results = Find::find('bees', 'chapters')
+        $results = Find::findBy('bees', 'chapters')
             ->get()
             ->pluck('label');
 
@@ -50,7 +50,7 @@ class FindTest extends TestCase
 
     public function testFindsAnything(): void
     {
-        $results = Find::find('bees', 'any')
+        $results = Find::findBy('bees', 'any')
             ->get()
             ->pluck('label');
 
@@ -74,6 +74,6 @@ class FindTest extends TestCase
         $this->expectException(AuthorizationException::class);
         $this->expectExceptionMessage('You do not have permission to find books');
 
-        Find::find('unholy', 'books');
+        Find::findBy('unholy', 'books');
     }
 }

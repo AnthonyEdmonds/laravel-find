@@ -166,11 +166,11 @@ The start page should provide a text-box for the find term, and a drop-down to s
 
 The results page should show a list of whatever was found.
 
-#### Find::find
+#### Find::findBy
 
-Calling `find($term, $type)` will construct and return a QueryBuilder statement which is ready to be executed.
+Calling `findBy($term, $type)` will construct and return a QueryBuilder statement which is ready to be executed.
 
-* `$term` is the value to use during the find, which is passed into each Model's `find()` method
+* `$term` is the value to use during the find, which is passed into each Model's `findBy()` method
 * `$type` is the key for the specific Model type in the `models` config, or the `anything-key` to find across all allowed Models
 
 As it is a standard query, you may extend the query as required, such as adding an `order()`.
@@ -178,7 +178,7 @@ As it is a standard query, you may extend the query as required, such as adding 
 Run the query using whichever QueryBuilder method you require, such as `paginate()` or `get()`.
 
 ```php
-$query = Find::find('my-term', 'users');
+$query = Find::findBy('my-term', 'users');
 $query->orderBy('users.name');
 $query->paginate(10);
 ```

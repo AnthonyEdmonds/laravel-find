@@ -43,7 +43,7 @@ trait Findable
     abstract protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder;
     
     /* Build a query to find a specific model of this type */
-    public static function find(string $term): Builder
+    public static function findBy(string $term): Builder
     {
         $query = DB::table(static::tableName())
             ->select([

@@ -6,7 +6,7 @@ use AnthonyEdmonds\LaravelFind\Tests\Models\Author;
 use AnthonyEdmonds\LaravelFind\Tests\TestCase;
 use Illuminate\Support\Collection;
 
-class FindTest extends TestCase
+class FindByTest extends TestCase
 {
     protected Author $author;
     protected Author $unexpectedAuthor;
@@ -22,7 +22,7 @@ class FindTest extends TestCase
 
         $this->unexpectedAuthor = Author::factory()->create();
 
-        $this->results = Author::find('Bee')->get();
+        $this->results = Author::findBy('Bee')->get();
     }
 
     public function testSelectsLabel(): void
