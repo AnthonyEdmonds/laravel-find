@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Find
 {
     /* Perform a search for a term */
-    public static function find(string $term, string $type): Builder
+    public static function findBy(string $term, string $type): Builder
     {
         $anythingKey = config('laravel-find.anything-key');
         $modelsAllowed = self::types(false);
@@ -21,7 +21,7 @@ class Find
 
         return $type === $anythingKey
             ? self::findAnything($term, $modelsAllowed, $anythingKey)
-            : $modelsAllowed[$type]::find($term);
+            : $modelsAllowed[$type]::findBy($term);
     }
     
     /* Which models the current User can find */
@@ -67,7 +67,7 @@ class Find
         
         foreach ($modelsAllowed as $modelClass) {
             $query->unionAll(
-                $modelClass::find($term)
+                $modelClass::findBy($term)
             );
         }
         
