@@ -13,7 +13,9 @@ use Illuminate\Support\Collection;
 class FindByTest extends TestCase
 {
     protected Author $author;
+
     protected Book $book;
+
     protected Collection $chapters;
 
     protected function setUp(): void

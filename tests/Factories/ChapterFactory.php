@@ -2,7 +2,6 @@
 
 namespace AnthonyEdmonds\LaravelFind\Tests\Factories;
 
-use AnthonyEdmonds\LaravelFind\Tests\Models\Author;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Book;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Chapter;
 use Illuminate\Database\Eloquent\Factories\Factory;

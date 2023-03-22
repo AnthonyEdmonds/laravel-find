@@ -9,7 +9,9 @@ use Illuminate\Support\Collection;
 class FindByTest extends TestCase
 {
     protected Author $author;
+
     protected Author $unexpectedAuthor;
+
     protected Collection $results;
 
     protected function setUp(): void

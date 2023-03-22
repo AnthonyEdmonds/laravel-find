@@ -18,7 +18,7 @@ class Author extends Model
     protected $fillable = [
         'name',
     ];
-    
+
     protected $guarded = [
         'id',
         'created_at',
@@ -47,7 +47,7 @@ class Author extends Model
     {
         return true;
     }
-    
+
     protected static function findLabel(): string
     {
         return 'name';

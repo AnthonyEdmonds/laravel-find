@@ -49,7 +49,7 @@ class Chapter extends Model
     {
         return true;
     }
-    
+
     protected static function findLabel(): string
     {
         return 'chapters.title';

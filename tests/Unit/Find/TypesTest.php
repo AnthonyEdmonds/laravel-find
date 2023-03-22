@@ -4,7 +4,6 @@ namespace AnthonyEdmonds\LaravelFind\Tests\Unit\Find;
 
 use AnthonyEdmonds\LaravelFind\Find;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Author;
-use AnthonyEdmonds\LaravelFind\Tests\Models\Book;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Chapter;
 use AnthonyEdmonds\LaravelFind\Tests\TestCase;
 

@@ -23,7 +23,7 @@ class Find
             ? self::findAnything($term, $modelsAllowed, $anythingKey)
             : $modelsAllowed[$type]::findBy($term);
     }
-    
+
     /* Which models the current User can find */
     public static function types(bool $labels = true): array
     {
@@ -31,11 +31,11 @@ class Find
         $models = config('laravel-find.models');
         $findable = [];
         $user = Auth::user();
-        
+
         if ($anythingKey !== false) {
             $findable[$anythingKey] = config('laravel-find.anything-label');
         }
-        
+
         foreach ($models as $type => $modelClass) {
             if ($modelClass::canBeFoundBy($user) === true) {
                 $findable[$type] = $labels === false
@@ -43,10 +43,10 @@ class Find
                     : $modelClass::findTypeLabel();
             }
         }
-            
+
         return $findable;
     }
-    
+
     /* A non-findable base query for findAnything to clamp onto */
     protected static function baseQuery(): Builder
     {
@@ -58,19 +58,19 @@ class Find
             ])
             ->whereRaw('1 = 2');
     }
-    
+
     /* Find results from any of the provided models */
     protected static function findAnything(string $term, array $modelsAllowed, string $anythingKey): Builder
     {
         $query = self::baseQuery();
         unset($modelsAllowed[$anythingKey]);
-        
+
         foreach ($modelsAllowed as $modelClass) {
             $query->unionAll(
                 $modelClass::findBy($term)
             );
         }
-        
+
         return $query;
     }
 }

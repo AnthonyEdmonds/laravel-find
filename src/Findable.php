@@ -14,7 +14,7 @@ trait Findable
 
     /* Whether the model type can be found by the viewing User */
     abstract public static function canBeFoundBy(?Model $user): bool;
-    
+
     /*
      * The primary identifier for the result, which can be:
      * A column name, such as 'title'
@@ -22,7 +22,7 @@ trait Findable
      * A sentence with placeholders, such as '~title by ~author'
      */
     abstract protected static function findLabel(): string;
-    
+
     /*
      * A brief description of the result, which can be:
      * A column name, such as 'description'
@@ -30,7 +30,7 @@ trait Findable
      * A sentence with placeholders, such as '~genre ~page_count'
      */
     abstract protected static function findDescription(): string;
-    
+
     /*
      * The URL where the result can be found, which can be:
      * A column name, such as 'url'
@@ -41,24 +41,25 @@ trait Findable
 
     /* The to be applied to the search, such as "where('name', '=', $term)" */
     abstract protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder;
-    
+
     /* Build a query to find a specific model of this type */
     public static function findBy(string $term): Builder
     {
         $query = DB::table(static::tableName())
             ->select([
-                DB::raw(static::replacePlaceholders(static::findLabel(), '~', ' ') . ' AS label'),
-                DB::raw(static::replacePlaceholders(static::findDescription(), '~', ' ') . ' AS description'),
-                DB::raw(static::replacePlaceholders(static::findLink(), '~', '/') . ' AS link'),
+                DB::raw(static::replacePlaceholders(static::findLabel(), '~', ' ').' AS label'),
+                DB::raw(static::replacePlaceholders(static::findDescription(), '~', ' ').' AS description'),
+                DB::raw(static::replacePlaceholders(static::findLink(), '~', '/').' AS link'),
             ]);
-        
+
         return static::findFilters($query, $term, Auth::user());
     }
-    
+
     /* Get the table name of the current model */
     public static function tableName(): string
     {
         $model = new static();
+
         return $model->getTable();
     }
 
@@ -76,7 +77,7 @@ trait Findable
         }
 
         foreach ($placeholders as $index => $placeholder) {
-            $sql = 'REPLACE(' . $sql;
+            $sql = 'REPLACE('.$sql;
 
             $index === 0
                 ? $sql .= '"'.$link.'",'
