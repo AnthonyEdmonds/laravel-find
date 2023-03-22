@@ -21,7 +21,7 @@ class BookFactory extends Factory
     public function forAuthor(Author $author): self
     {
         return $this->state([
-            'author_id' => $author->id
+            'author_id' => $author->id,
         ]);
     }
 

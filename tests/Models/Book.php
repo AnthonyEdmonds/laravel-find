@@ -54,7 +54,7 @@ class Book extends Model
     {
         return false;
     }
-    
+
     protected static function findLabel(): string
     {
         return 'title';
