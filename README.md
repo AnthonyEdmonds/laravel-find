@@ -1,9 +1,6 @@
 # laravel-find
 Find models within your Laravel system with minimal overhead
 
-* Laravel 9
-* PHP 8
-
 ## Installation
 
 Add this library using `composer require anthonyedmonds/laravel-find`.
