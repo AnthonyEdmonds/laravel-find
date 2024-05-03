@@ -107,6 +107,10 @@ trait Findable
 
         while ($cursor !== false) {
             $cursor = strpos($haystack, $startToken, $cursor);
+            if ($cursor === false) {
+                break;
+            }
+            
             $endIndex = strpos($haystack, $endToken, $cursor);
 
             $placeholders[] = substr(
