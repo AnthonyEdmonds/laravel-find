@@ -6,6 +6,7 @@ use AnthonyEdmonds\LaravelFind\Find;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Author;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Book;
 use AnthonyEdmonds\LaravelFind\Tests\Models\Chapter;
+use AnthonyEdmonds\LaravelFind\Tests\Models\Excluded;
 use AnthonyEdmonds\LaravelFind\Tests\TestCase;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Collection;
@@ -17,6 +18,8 @@ class FindByTest extends TestCase
     protected Book $book;
 
     protected Collection $chapters;
+
+    protected Excluded $excluded;
 
     protected function setUp(): void
     {
@@ -34,6 +37,10 @@ class FindByTest extends TestCase
         $this->chapters = Chapter::factory()
             ->forBook($this->book)
             ->count(3)
+            ->create();
+
+        $this->excluded = Excluded::factory()
+            ->withName('Bees Unfound')
             ->create();
     }
 
@@ -57,17 +64,21 @@ class FindByTest extends TestCase
             ->pluck('label');
 
         $this->assertTrue(
-            $results->contains($this->author->name)
+            $results->contains($this->author->name),
         );
 
         foreach ($this->chapters as $chapter) {
             $this->assertTrue(
-                $results->contains($chapter->title)
+                $results->contains($chapter->title),
             );
         }
 
         $this->assertFalse(
-            $results->contains($this->book->title)
+            $results->contains($this->book->title),
+        );
+
+        $this->assertFalse(
+            $results->contains($this->excluded->name),
         );
     }
 
