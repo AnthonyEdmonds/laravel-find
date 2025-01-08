@@ -198,7 +198,7 @@ By default, the value is each Model's `findDisplayLabel()`. Passing `true` to th
 
 A Laravel FormRequest is provided for convenience called `FindRequest`.
 
-Simple use it on the controller methods for handling searches:
+Simply use it on controller methods for handling searches:
 
 ```php
 public function results(FindRequest $request): View
@@ -207,6 +207,34 @@ public function results(FindRequest $request): View
 }
 ```
 
+### FindDate
+
+Easily format dates entered by users in multiple formats into MySQL compatible fuzzy search terms.
+
+Single part and invalid date formats will be returned as a fuzzy search term.
+
+```php
+FindDate::term('1/3/2024'); // 2024-03-01%
+FindDate::term('01/03'); // %03-01%
+FindDate::term('03'); // %03%
+FindDate::term('potato'); // %potato%
+```
+
+Users should be prompted to search in day-month-year order, with at least two parts of the date.
+
+Year-month-day is supported where a four-digit year is provided.
+
+Two digit and single digit dates have been catered for where the dates may conflict.
+
+```php
+FindDate::term('8/12'); // %12-08%, works for both year-month and month-day
+```
+
+Support for leading zeroes has been included where possible.
+
 ## Roadmap
 
-* Routes macro?
+* Search controller
+* Routes macro
+* Search Bar
+* Results page
