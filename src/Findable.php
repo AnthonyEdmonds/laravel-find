@@ -42,6 +42,11 @@ trait Findable
     /* The to be applied to the search, such as "where('name', '=', $term)" */
     abstract protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder;
 
+    public static function excludeFromFindAny(): bool
+    {
+        return false;
+    }
+
     /* Build a query to find a specific model of this type */
     public static function findBy(string $term): Builder
     {

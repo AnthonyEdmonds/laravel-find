@@ -66,9 +66,12 @@ class Find
         unset($modelsAllowed[$anythingKey]);
 
         foreach ($modelsAllowed as $modelClass) {
-            $query->unionAll(
-                $modelClass::findBy($term)
-            );
+            /** @var class-string<Findable> $modelClass */
+            if ($modelClass::excludeFromFindAny() === false) {
+                $query->unionAll(
+                    $modelClass::findBy($term)
+                );
+            }
         }
 
         return $query;
