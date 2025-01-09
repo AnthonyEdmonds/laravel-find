@@ -52,9 +52,9 @@ trait Findable
     {
         $query = DB::table(static::tableName())
             ->select([
-                DB::raw(static::replacePlaceholders(static::findLabel(), '~', ' ').' AS label'),
-                DB::raw(static::replacePlaceholders(static::findDescription(), '~', ' ').' AS description'),
-                DB::raw(static::replacePlaceholders(static::findLink(), '~', '/').' AS link'),
+                DB::raw(static::replacePlaceholders(static::findLabel(), '~', ' ') . ' AS label'),
+                DB::raw(static::replacePlaceholders(static::findDescription(), '~', ' ') . ' AS description'),
+                DB::raw(static::replacePlaceholders(static::findLink(), '~', '/') . ' AS link'),
             ]);
 
         return static::findFilters($query, $term, Auth::user());
@@ -72,7 +72,7 @@ trait Findable
     protected static function replacePlaceholders(
         string $link,
         string $startToken,
-        string $endToken
+        string $endToken,
     ): string {
         $placeholders = static::findPlaceholders($link, $startToken, $endToken);
         $sql = '';
@@ -82,13 +82,13 @@ trait Findable
         }
 
         foreach ($placeholders as $index => $placeholder) {
-            $sql = 'REPLACE('.$sql;
+            $sql = 'REPLACE(' . $sql;
 
             $index === 0
-                ? $sql .= '"'.$link.'",'
+                ? $sql .= '"' . $link . '",'
                 : $sql .= ',';
 
-            $sql .= '"'.$placeholder.'",';
+            $sql .= '"' . $placeholder . '",';
             $sql .= substr($placeholder, 1);
 
             $sql .= ')';
@@ -101,7 +101,7 @@ trait Findable
     protected static function findPlaceholders(
         string $haystack,
         string $startToken,
-        string $endToken
+        string $endToken,
     ): array {
         $cursor = 0;
         $placeholders = [];
@@ -115,7 +115,7 @@ trait Findable
             if ($cursor === false) {
                 break;
             }
-            
+
             $endIndex = strpos($haystack, $endToken, $cursor);
 
             $placeholders[] = substr(
@@ -123,7 +123,7 @@ trait Findable
                 $cursor,
                 $endIndex !== false
                     ? ($endIndex - $cursor)
-                    : null
+                    : null,
             );
 
             $cursor = $endIndex;

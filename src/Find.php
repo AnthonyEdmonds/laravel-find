@@ -69,7 +69,7 @@ class Find
             /** @var class-string<Findable> $modelClass */
             if ($modelClass::excludeFromFindAny() === false) {
                 $query->unionAll(
-                    $modelClass::findBy($term)
+                    $modelClass::findBy($term),
                 );
             }
         }

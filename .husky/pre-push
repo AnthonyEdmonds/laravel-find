@@ -1,0 +1,5 @@
+npm run test
+
+npm run badges
+git add .github/*.svg
+git diff-index --quiet --cached HEAD || git commit -m "Updated badges" --no-verify

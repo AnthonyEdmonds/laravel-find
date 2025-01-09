@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "name": "laravel-find",
+  "description": "",
+  "keywords": [
+    "laravel",
+    "find"
+  ],
+  "author": "Anthony Edmonds",
+  "license": "MIT",
+  "homepage": "https://github.com/AnthonyEdmonds/laravel-find",
+  "scripts": {
+    "badges": "php vendor/networkrailbusinesssystems/badges/badges.php",
+    "larastan": "php vendor/bin/phpstan analyse --memory-limit 512M",
+    "pint": "php ./vendor/bin/pint --preset=per",
+    "test": "php vendor/bin/paratest",
+    "test-slow": "php vendor/bin/phpunit"
+  },
+  "devDependencies": {
+    "husky": "^9"
+  }
+}

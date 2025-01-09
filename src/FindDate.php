@@ -6,7 +6,7 @@ use Carbon\Carbon;
 
 class FindDate
 {
-    const array THREE_PART_FORMATS = [
+    public const array THREE_PART_FORMATS = [
         'd-m-Y' => 'Y-m-d\%',
         'd-m-y' => 'Y-m-d\%',
         'd-n-Y' => 'Y-m-d\%',
@@ -23,7 +23,7 @@ class FindDate
         'Y-n-j' => 'Y-m-d\%',
     ];
 
-    const array TWO_PART_FORMATS = [
+    public const array TWO_PART_FORMATS = [
         'd-m' => '\%m-d\%',
         'd-n' => '\%m-d\%',
         'j-m' => '\%m-d\%',
@@ -38,16 +38,16 @@ class FindDate
         'Y-n' => 'Y-m-\%',
     ];
 
-    const array ONE_PART_FORMATS = [
-        'd' => '\%d\%',
-        'j' => '\%d\%',
-        'm' => '\%m\%',
-        'n' => '\%m\%',
+    public const array ONE_PART_FORMATS = [
+        // 'd' => '\%-d\%', Causes too many conflicts with other search terms, such as IDs
+        // 'j' => '\%-d\%', Causes too many conflicts with other search terms, such as IDs
+        // 'm' => '\%-m\%', Causes too many conflicts with other search terms, such as IDs
+        // 'n' => '\%-m\%', Causes too many conflicts with other search terms, such as IDs
         'Y' => 'Y-\%',
-        'y' => 'Y-\%',
+        // 'y' => 'Y-\%', Causes too many conflicts with other search terms, such as IDs
     ];
 
-    static function term(string $term, string $delimiter = '-'): string
+    public static function term(string $term, string $delimiter = '-'): string|false
     {
         $term = preg_replace('/\D/', $delimiter, $term);
 
@@ -65,6 +65,6 @@ class FindDate
             }
         }
 
-        return "%$term%";
+        return false;
     }
 }

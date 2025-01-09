@@ -13,7 +13,7 @@ class TypesTest extends TestCase
     {
         $this->assertArrayHasKey(
             'any',
-            Find::types()
+            Find::types(),
         );
     }
 
@@ -23,7 +23,7 @@ class TypesTest extends TestCase
 
         $this->assertArrayNotHasKey(
             'any',
-            Find::types()
+            Find::types(),
         );
     }
 
@@ -31,12 +31,12 @@ class TypesTest extends TestCase
     {
         $this->assertEquals(
             Author::findTypeLabel(),
-            Find::types()['authors']
+            Find::types()['authors'],
         );
 
         $this->assertEquals(
             Chapter::findTypeLabel(),
-            Find::types()['chapters']
+            Find::types()['chapters'],
         );
     }
 
@@ -44,7 +44,7 @@ class TypesTest extends TestCase
     {
         $this->assertArrayNotHasKey(
             'books',
-            Find::types()
+            Find::types(),
         );
     }
 }
