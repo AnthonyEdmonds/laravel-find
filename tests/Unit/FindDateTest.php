@@ -52,16 +52,16 @@ class FindDateTest extends TestCase
             'Y-n' => ['term' => '2012/8', 'expected' => '2012-08-%'],
 
             // One Part Formats
-            'd' => ['term' => '03', 'expected' => '%03%'],
-            'j' => ['term' => '3', 'expected' => '%03%'],
-            'm' => ['term' => '08', 'expected' => '%08%'],
-            'n' => ['term' => '8', 'expected' => '%08%'],
+            'd' => ['term' => '03', 'expected' => false],
+            'j' => ['term' => '3', 'expected' => false],
+            'm' => ['term' => '08', 'expected' => false],
+            'n' => ['term' => '8', 'expected' => false],
             'Y' => ['term' => '2012', 'expected' => '2012-%'],
-            'y' => ['term' => '69', 'expected' => '2069-%'],
-            'y (conflict)' => ['term' => '12', 'expected' => '%12%'],
+            'y' => ['term' => '69', 'expected' => false],
+            'y (conflict)' => ['term' => '12', 'expected' => false],
 
             // Invalid Formats
-            'invalid' => ['term' => '15468', 'expected' => '%15468%'],
+            'invalid' => ['term' => '15468', 'expected' => false],
         ];
     }
 }

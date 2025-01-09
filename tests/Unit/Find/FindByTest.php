@@ -52,7 +52,7 @@ class FindByTest extends TestCase
 
         foreach ($this->chapters as $chapter) {
             $this->assertTrue(
-                $results->contains($chapter->title)
+                $results->contains($chapter->title),
             );
         }
     }

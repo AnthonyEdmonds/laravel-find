@@ -11,7 +11,7 @@ class TableNameTest extends TestCase
     {
         $this->assertEquals(
             'authors',
-            Author::tableName()
+            Author::tableName(),
         );
     }
 }

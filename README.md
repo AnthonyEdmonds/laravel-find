@@ -1,4 +1,11 @@
 # laravel-find
+
+![Composer status](.github/composer.svg)
+![Coverage status](.github/coverage.svg)
+![NPM status](.github/npm.svg)
+![PHP version](.github/php.svg)
+![Tests status](.github/tests.svg)
+
 Find models within your Laravel system with minimal overhead
 
 ## Installation
@@ -211,13 +218,16 @@ public function results(FindRequest $request): View
 
 Easily format dates entered by users in multiple formats into MySQL compatible fuzzy search terms.
 
-Single part and invalid date formats will be returned as a fuzzy search term.
+Dates must have at least two parts, delimited by a non-numeric character.
+
+Non-year Single part and invalid dates will be returned as false.
 
 ```php
 FindDate::term('1/3/2024'); // 2024-03-01%
 FindDate::term('01/03'); // %03-01%
-FindDate::term('03'); // %03%
-FindDate::term('potato'); // %potato%
+FindDate::term('2024'); // 2024-%
+FindDate::term('03'); // false
+FindDate::term('potato'); // false
 ```
 
 Users should be prompted to search in day-month-year order, with at least two parts of the date.

@@ -31,7 +31,7 @@ class FindByTest extends TestCase
     {
         $this->assertEquals(
             $this->author->name,
-            $this->results->first()->label
+            $this->results->first()->label,
         );
     }
 
@@ -39,22 +39,22 @@ class FindByTest extends TestCase
     {
         $this->assertEquals(
             'An author',
-            $this->results->first()->description
+            $this->results->first()->description,
         );
     }
 
     public function testReplacesLinkPlaceholders(): void
     {
         $this->assertEquals(
-            'https://my-link/'.$this->author->id,
-            $this->results->first()->link
+            'https://my-link/' . $this->author->id,
+            $this->results->first()->link,
         );
     }
 
     public function testAddsFilters(): void
     {
         $this->assertFalse(
-            $this->results->where('id', '=', $this->unexpectedAuthor)->isNotEmpty()
+            $this->results->where('id', '=', $this->unexpectedAuthor)->isNotEmpty(),
         );
     }
 }
