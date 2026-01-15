@@ -6,7 +6,7 @@
 ![PHP version](.github/php.svg)
 ![Tests status](.github/tests.svg)
 
-Find models within your Laravel system with minimal overhead
+Find and filter models with persistant memory of the users last used parameters.
 
 ## Installation
 
@@ -14,237 +14,34 @@ Add this library using `composer require anthonyedmonds/laravel-find`.
 
 The service provider will be automatically registered.
 
-Export the config file using `php artisan vendor:publish --provider="AnthonyEdmonds\LaravelFind\FindServiceProvider"`
+To customise the search bar, export it using `php artisan vendor:publish --provider="AnthonyEdmonds\LaravelFind\FindServiceProvider"`
 
-## Configuration
+## How does this work?
 
-There are a small number of options that need to be configured prior to using the library.
+LaravelFind provides a `Finder` base class which you can extend.
 
-```php
-return [
-    /* The key and label for searching all models; set as false to disable */
-    'anything-key' => 'any',
-    'anything-label' => 'Anything',
-    
-    /* A table that is guaranteed to exist */
-    'base-table' => 'users',
-    
-    /* Which models can be searched for, and its display label */
-    'models' => [
-        'users' => \App\Models\User::class,
-    ],
-];
-```
+Fill out all of the abstract methods to provide users with a list of access filters, status filters, and sort options.
 
-### anything-key / anything-label
+The search results and filters can then be provided to the user via the `FinderOutput` class on your blade.
 
-Users are able to find Models across any that they have access to.
+The provided search bar template gives you an idea of how to present the various filters on the UI.
 
-The key and label are controlled using these keys.
+`Finder` writes the last used search term and filters to the session, so that the page will remain as expected between page loads.
 
-Set the key to `false` to disable searching across Models.
+## Upgrading from v5
 
-### base-table
+Version 6+ is a fundamentally different program and should not be considered a direct upgrade.
 
-Searching across all models requires a base query upon which all others are joined.
+Rather than providing a single generic search area, LaravelFind is now tailored to make searching a single model easier.
 
-Set this value to the name of a table which is guaranteed to exist in the system, such as the 'users' table.
+The `Finder` class provides everything needed to support a classic table of results, which will require some work on your part to implement the UI.
 
-### models
+## Help and support
 
-This list controls which Models can be found using this library.
+You are welcome to raise any issues or questions on GitHub.
 
-Each Model type to be found should be keyed with a plural label, with the Model class as the value.
+If you wish to contribute to this library, raise an issue before submitting a forked pull request.
 
-## Usage
+## Licence
 
-This library is split into two parts, a `Findable` trait which is used on the Models to be found, and a `Find` static class which is used to get results.
-
-### Findable
-
-Each Model listed in the `models` config key must use the `Findable` trait. This will add a number of abstract static methods which must be implemented.
-
-```php
-class Author extends Model
-{
-    use Findable;
-
-    public static function findDisplayLabel(): string
-    {
-        return 'Authors by name and book title';
-    }
-
-    public static function canBeFoundBy(?Model $user): bool
-    {
-        return true;
-    }
-    
-    protected static function findLabel(): string
-    {
-        return 'name';
-    }
-
-    protected static function findDescription(): string
-    {
-        return '"An author"';
-    }
-
-    protected static function findLink(): string
-    {
-        return route('authors.show', '~id');
-    }
-
-    protected static function findFilters(Builder $query, string $term): Builder
-    {
-        return $query->where('name', 'LIKE', "%$term%");
-    }
-}
-```
-
-#### findDisplayLabel
-
-The display label for the Model type, such as "Authors by name and book title".
-
-Used primarily for generally identifying the Model, preferably with context around which terms users can find by.
-
-#### canBeFoundBy
-
-Used to determine whether the current user (or null, if not signed in) can find a type of Model.
-
-This logic will show or hide the entire Model type based on a `true` or `false` return.
-
-The Find helper will throw an `AuthorizationException` if a user attempts to find a Model they are not allowed to. 
-
-#### findLabel
-
-The primary identifier for the result, which can be:
-
-* A column name, such as 'title'
-* A static description, such as '"Book"'
-* A sentence with placeholders, such as '~title by ~author'
-
-#### findDescription
-
-A brief description of the result, which can be:
-
-* A column name, such as 'description'
-* A static description, such as '"A collection of pages"'
-* A sentence with placeholders, such as '~genre ~page_count'
-
-#### findLink
-
-The URL where the result can be found, which can be:
-
-* A column name, such as 'url'
-* A static link, such as '"https://my-site.com/users"'
-* A sentence with placeholders, such as 'https://my-site.com/books/~book_id/~id'
-
-#### findFilters
-
-The filters to be applied to the search, such as `->where('name', '=', $term)`.
-
-As this library uses Laravel's QueryBuilder, you can use related Models to find results by performing a `leftJoin` with a matching `where` statement:
-
-```php
-protected static function findFilters(Builder $query, string $term, ?Model $user = null): Builder
-{
-    return $query
-        ->leftJoin('books', 'books.id', '=', 'chapters.book_id')
-        ->where('chapters.title', 'LIKE', "%$term%")
-        ->orWhere('books.title', 'LIKE', "%$term%");
-}
-```
-
-You may utilise the `$user` parameter to further refine the search to the current user.
-
-### Find
-
-Once the `Findable` trait has been implemented on each Model you may use the `Find` helper to get results.
-
-Most implementations will need to provide two pages to end users:
-
-* Start
-* Results
-
-The start page should provide a text-box for the find term, and a drop-down to select which type of thing to find.
-
-The results page should show a list of whatever was found.
-
-#### Find::findBy
-
-Calling `findBy($term, $type)` will construct and return a QueryBuilder statement which is ready to be executed.
-
-* `$term` is the value to use during the find, which is passed into each Model's `findBy()` method
-* `$type` is the key for the specific Model type in the `models` config, or the `anything-key` to find across all allowed Models
-
-As it is a standard query, you may extend the query as required, such as adding an `order()`.
-
-Run the query using whichever QueryBuilder method you require, such as `paginate()` or `get()`.
-
-```php
-$query = Find::findBy('my-term', 'users');
-$query->orderBy('users.name');
-$query->paginate(10);
-```
-
-This will return a standard `Collection` object containing the results.
-
-Each result will have a `label`, `description`, and `link` attribute.
-
-#### Find::types
-
-Calling `types()` will return a list of Models which the current user can find.
-
-This list can be used to populate a dropdown when starting a find to narrow the types of Models to locate, and identify the Models that the user is allowed to find.
-
-The returned array is keyed using the keys from the config `models`.
-
-By default, the value is each Model's `findDisplayLabel()`. Passing `true` to the method will instead return the Model class. 
-
-### FindRequest
-
-A Laravel FormRequest is provided for convenience called `FindRequest`.
-
-Simply use it on controller methods for handling searches:
-
-```php
-public function results(FindRequest $request): View
-{
-    // Show results...
-}
-```
-
-### FindDate
-
-Easily format dates entered by users in multiple formats into MySQL compatible fuzzy search terms.
-
-Dates must have at least two parts, delimited by a non-numeric character.
-
-Non-year Single part and invalid dates will be returned as false.
-
-```php
-FindDate::term('1/3/2024'); // 2024-03-01%
-FindDate::term('01/03'); // %03-01%
-FindDate::term('2024'); // 2024-%
-FindDate::term('03'); // false
-FindDate::term('potato'); // false
-```
-
-Users should be prompted to search in day-month-year order, with at least two parts of the date.
-
-Year-month-day is supported where a four-digit year is provided.
-
-Two digit and single digit dates have been catered for where the dates may conflict.
-
-```php
-FindDate::term('8/12'); // %12-08%, works for both year-month and month-day
-```
-
-Support for leading zeroes has been included where possible.
-
-## Roadmap
-
-* Search controller
-* Routes macro
-* Search Bar
-* Results page
+Published under the MIT licence.

@@ -1,0 +1,239 @@
+<?php
+
+namespace AnthonyEdmonds\LaravelFind;
+
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
+
+abstract class Finder
+{
+    /**
+     * Default consts
+     * --------------
+     * Set the default value for each find part
+     */
+
+    public const string DEFAULT_FILTER = 'all';
+
+    public const string DEFAULT_STATUS = 'all';
+
+    public const string DEFAULT_SORT = 'newest';
+
+    /**
+     * Key consts
+     * ----------
+     * Customsise the session keys for each find part
+     */
+
+    public const string KEY_FILTER = 'filter';
+
+    public const string KEY_SEARCH = 'search';
+
+    public const string KEY_SORT = 'sort';
+
+    public const string KEY_STATUS = 'status';
+
+    /**
+     * Properties
+     * ----------
+     * The loaded find parts and authenticated model
+     */
+
+    public string $currentFilter = '';
+
+    public string $currentSearch = '';
+
+    public string $currentSort = '';
+
+    public string $currentStatus = '';
+
+    public ?Authenticatable $user = null;
+
+    /** Loads the current find parts and any authenticated model */
+    public function __construct()
+    {
+        $this->user = Auth::user();
+        $this->currentFilter = static::loadTerm(static::KEY_FILTER, static::DEFAULT_FILTER);
+        $this->currentSearch = static::loadTerm(static::KEY_SEARCH, '');
+        $this->currentSort = static::loadTerm(static::KEY_SORT, static::DEFAULT_SORT);
+        $this->currentStatus = static::loadTerm(static::KEY_STATUS, static::DEFAULT_STATUS);
+    }
+
+    /** Retrieves the current term from the request, session, or default */
+    public function loadTerm(string $key, string $default): string
+    {
+        $value = Request::has($key) === true
+            ? Request::get($key) ?? $default
+            : Session::get($key) ?? $default;
+
+        Session::put($key, $value);
+
+        return $value;
+    }
+
+    /**
+     * Finding
+     * -------
+     * The core of how you use your Finder class
+     * Add `YourFinder` to the `with` parameter of your call to `view`
+     * view('my-view')->with('finder', YourFinder::find())
+     * Pull the results into a table, then use the provided search bar template or make your own
+     * <x-your-table :caption="$finder->caption" :data="$finder->results" />
+     * <x-laravel-finder::search-bar :finder="$finder" />
+     */
+
+    /** Provides the results and everything a blade needs to use a Finder */
+    public static function find(): FinderOutput
+    {
+        $finder = new static();
+
+        return new FinderOutput(
+            $finder->caption(),
+            $finder->search(),
+
+            $finder->currentFilter,
+            $finder->currentSearch,
+            $finder->currentSort,
+            $finder->currentStatus,
+
+            $finder->makeFilterItems(),
+            $finder->listSearchable(),
+            $finder->makeSortItems(),
+            $finder->makeStatusItems(),
+        );
+    }
+
+    /** Find some models utilising the current search, filter, status, and order */
+    abstract public function search(): ResourceCollection;
+
+    /**
+     * Table captioning
+     * ----------------
+     * These methods allow you to create a user-friendly description of the current search, filters, and sorting
+     * Each method should return a string, such as "by newest" or "open"
+     * The strings are then combined using placeholders on the filter label, for example:
+     * "New ~status requests ~sort" which might become "New open requests by newest"
+     */
+
+    /** Provide a filter description which can include the available placeholders */
+    abstract public function filterLabel(string $currentFilter): string;
+
+    /** A description of the current status filter */
+    abstract public function statusLabel(string $currentStatus): string;
+
+    /** A description of the current sort order */
+    abstract public function sortLabel(string $currentSort): string;
+
+    /** Generates a human friendly caption for the table of results */
+    public function caption(): string
+    {
+        return Str::of(
+            $this->filterLabel($this->currentFilter)
+        )
+            ->replace(
+                [
+                    '~sort',
+                    '~status',
+                ],
+                [
+                    $this->sortLabel($this->currentSort),
+                    $this->statusLabel($this->currentStatus)
+                ]
+            )
+            ->ucfirst();
+    }
+
+    /**
+     * Lists
+     * ---------
+     * These methods provide the labels for each filter, status, and sort on the UI
+     */
+
+    /** Provide a list of filter options in $key => $label format */
+    abstract function listFilters(): array;
+
+    /** Provide a list of searchable columns in $label format */
+    abstract public function listSearchable(): array;
+
+    /** Provide a list of sort options in $key => $label format */
+    abstract public function listSorts(): array;
+
+    /** Provide a list of status options in $key => $label format */
+    abstract public function listStatuses(): array;
+
+    /**
+     * Items
+     * -----
+     * These methods create link items for use on the UI
+     */
+
+    /** The name of the route which this Finder links to, such as "orders.index" */
+    abstract public function route(): string;
+
+    /** Makes a FindLink object based on the current filter */
+    protected function makeFilterItems(): array
+    {
+        $items = $this->listFilters();
+
+        foreach ($items as $key => $label) {
+            $items[] = new FinderLink(
+                $label,
+                $this->makeLink($key, null, null),
+            );
+        }
+
+        return $items;
+    }
+
+    /** Makes a FindLink object based on the current sort */
+    protected function makeSortItems(): array
+    {
+        $items = $this->listSorts();
+
+        foreach ($items as $key => $label) {
+            $items[] = new FinderLink(
+                $label,
+                $this->makeLink(null, null, $key),
+            );
+        }
+
+        return $items;
+    }
+
+    /** Makes a FindLink object based on the current status */
+    protected function makeStatusItems(): array
+    {
+        $items = $this->listStatuses();
+
+        foreach ($items as $key => $label) {
+            $items[] = new FinderLink(
+                $label,
+                $this->makeLink(null, $key, null),
+            );
+        }
+
+        return $items;
+    }
+
+    /** Makes a link to apply the selected filter, status, or sort change */
+    protected function makeLink(
+        ?string $filter,
+        ?string $status,
+        ?string $sort,
+    ): string {
+        return URL::route(
+            $this->route(),
+            [
+                static::KEY_FILTER => $filter ?? $this->currentFilter,
+                static::KEY_SEARCH => $this->currentSearch,
+                static::KEY_SORT => $sort ?? $this->currentSort,
+                static::KEY_STATUS => $status ?? $this->currentStatus,
+            ],
+        );
+    }
+}
