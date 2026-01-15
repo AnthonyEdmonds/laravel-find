@@ -9,12 +9,10 @@ class FinderOutput
     public function __construct(
         public string $caption,
         public ResourceCollection $results,
-
         public string $currentFilter,
         public string $currentSearch,
         public string $currentSort,
         public string $currentStatus,
-
         public array $filters,
         public array $searchable,
         public array $sorts,

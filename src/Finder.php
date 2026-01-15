@@ -55,7 +55,7 @@ abstract class Finder
     public ?Authenticatable $user = null;
 
     /** Loads the current find parts and any authenticated model */
-    public function __construct()
+    final public function __construct()
     {
         $this->user = Auth::user();
         $this->currentFilter = static::loadTerm(static::KEY_FILTER, static::DEFAULT_FILTER);
@@ -95,12 +95,10 @@ abstract class Finder
         return new FinderOutput(
             $finder->caption(),
             $finder->search(),
-
             $finder->currentFilter,
             $finder->currentSearch,
             $finder->currentSort,
             $finder->currentStatus,
-
             $finder->makeFilterItems(),
             $finder->listSearchable(),
             $finder->makeSortItems(),
@@ -133,7 +131,7 @@ abstract class Finder
     public function caption(): string
     {
         return Str::of(
-            $this->filterLabel($this->currentFilter)
+            $this->filterLabel($this->currentFilter),
         )
             ->replace(
                 [
@@ -142,8 +140,8 @@ abstract class Finder
                 ],
                 [
                     $this->sortLabel($this->currentSort),
-                    $this->statusLabel($this->currentStatus)
-                ]
+                    $this->statusLabel($this->currentStatus),
+                ],
             )
             ->ucfirst();
     }
@@ -155,7 +153,7 @@ abstract class Finder
      */
 
     /** Provide a list of filter options in $key => $label format */
-    abstract function listFilters(): array;
+    abstract public function listFilters(): array;
 
     /** Provide a list of searchable columns in $label format */
     abstract public function listSearchable(): array;

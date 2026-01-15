@@ -42,7 +42,7 @@ class TestFinder extends Finder
         };
     }
 
-    function listFilters(): array
+    public function listFilters(): array
     {
         return [
             'author' => 'Only show requests I created',
