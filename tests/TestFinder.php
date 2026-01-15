@@ -50,6 +50,15 @@ class TestFinder extends Finder
         ];
     }
 
+    public function listSearchable(): array
+    {
+        return [
+            'First name',
+            'Last name',
+            'Request ID',
+        ];
+    }
+
     public function listSorts(): array
     {
         return [
