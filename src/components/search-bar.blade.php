@@ -5,7 +5,7 @@
 <div>
     <div>
         <div>
-            <form action="{{ $finder->route }}">
+            <form action="{{ $finder->searchLink }}">
                 <label for="search">Quick search</label>
                 <input
                     name="search"
