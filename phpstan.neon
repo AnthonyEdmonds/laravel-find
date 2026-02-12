@@ -5,8 +5,3 @@ parameters:
     level: 5
     paths:
         - src
-    excludePaths:
-        - src/find-config.php
-    ignoreErrors:
-        - identifier: trait.unused
-        - identifier: varTag.trait

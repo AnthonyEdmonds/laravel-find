@@ -38,7 +38,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "AnthonyEdmonds\\LaravelFind\\FindServiceProvider"
+                "AnthonyEdmonds\\LaravelFind\\FinderServiceProvider"
             ]
         }
     },
