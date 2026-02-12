@@ -57,7 +57,7 @@
 
     <div>
         <p>
-            <a href="{{ $finder->clearLink }}">Clear all applied filters, searches, and sorts</a>.
+            <a href="{{ $finder->clear->link }}">{{ $finder->clear->label }}</a>.
         </p>
     </div>
 </div>

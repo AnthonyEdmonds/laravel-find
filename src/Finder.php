@@ -104,7 +104,10 @@ abstract class Finder
             $finder->makeSortItems(),
             $finder->makeStatusItems(),
             $finder->makeLink(null, null, null, null),
-            $finder->clearLink(),
+            new FinderLink(
+                $finder->clearLabel(),
+                $finder->clearLink(),
+            ),
         );
     }
 
@@ -167,13 +170,15 @@ abstract class Finder
     abstract public function listStatuses(): array;
 
     /**
-     * Items
-     * -----
-     * These methods create link items for use on the UI
+     * Clear
+     * ---------
+     * These methods customise the "clear filters" button
      */
 
-    /** The name of the route which this Finder links to, such as "orders.index" */
-    abstract public function route(): string;
+    public function clearLabel(): string
+    {
+        return 'Clear all applied filters, searches, and sorts';
+    }
 
     public function clearLink(): string
     {
@@ -184,6 +189,15 @@ abstract class Finder
             '',
         );
     }
+
+    /**
+     * Items
+     * -----
+     * These methods create link items for use on the UI
+     */
+
+    /** The name of the route which this Finder links to, such as "orders.index" */
+    abstract public function route(): string;
 
     /** Makes a FindLink object based on the current filter */
     protected function makeFilterItems(): array

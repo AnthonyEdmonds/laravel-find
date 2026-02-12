@@ -18,7 +18,7 @@ class FinderOutput
         public array $sorts,
         public array $statuses,
         public string $searchLink,
-        public string $clearLink,
+        public FinderLink $clear,
     ) {
         //
     }
