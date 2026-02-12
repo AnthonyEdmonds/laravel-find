@@ -18,7 +18,7 @@ class FinderServiceProvider extends ServiceProvider
         ], 'laravel-find');
 
         $this->loadViewsFrom(
-            __DIR__ . '/components',
+            __DIR__,
             'laravel-find',
         );
     }
