@@ -19,7 +19,7 @@ class FinderServiceProvider extends ServiceProvider
         $template = config('laravel-find.template') ?? 'default';
 
         $this->publishes([
-            __DIR__ . 'config.php' => config_path('laravel-find.php'),
+            __DIR__ . '/config.php' => config_path('laravel-find.php'),
         ], 'laravel-find-config');
 
         $this->publishes([
