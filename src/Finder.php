@@ -103,6 +103,7 @@ abstract class Finder
             $finder->listSearchable(),
             $finder->makeSortItems(),
             $finder->makeStatusItems(),
+            $finder->makeLink(null, null, null, null),
             $finder->clearLink(),
         );
     }
@@ -187,9 +188,10 @@ abstract class Finder
     /** Makes a FindLink object based on the current filter */
     protected function makeFilterItems(): array
     {
-        $items = $this->listFilters();
+        $filters = $this->listFilters();
+        $items = [];
 
-        foreach ($items as $key => $label) {
+        foreach ($filters as $key => $label) {
             $items[] = new FinderLink(
                 $label,
                 $this->makeLink($key, null, null, null),
@@ -202,9 +204,10 @@ abstract class Finder
     /** Makes a FindLink object based on the current sort */
     protected function makeSortItems(): array
     {
-        $items = $this->listSorts();
+        $sorts = $this->listSorts();
+        $items = [];
 
-        foreach ($items as $key => $label) {
+        foreach ($sorts as $key => $label) {
             $items[] = new FinderLink(
                 $label,
                 $this->makeLink(null, null, $key, null),
@@ -217,9 +220,10 @@ abstract class Finder
     /** Makes a FindLink object based on the current status */
     protected function makeStatusItems(): array
     {
-        $items = $this->listStatuses();
+        $states = $this->listStatuses();
+        $items = [];
 
-        foreach ($items as $key => $label) {
+        foreach ($states as $key => $label) {
             $items[] = new FinderLink(
                 $label,
                 $this->makeLink(null, $key, null, null),
