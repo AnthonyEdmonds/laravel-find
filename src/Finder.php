@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 abstract class Finder
 {
     /**
-     * Default consts
+     * Default constants
      * --------------
      * Set the default value for each find part
      */
@@ -25,9 +25,9 @@ abstract class Finder
     public const string DEFAULT_SORT = 'newest';
 
     /**
-     * Key consts
+     * Key constants
      * ----------
-     * Customsise the session keys for each find part
+     * Customise the session keys for each find part
      */
 
     public const string KEY_FILTER = 'filter';
@@ -103,6 +103,7 @@ abstract class Finder
             $finder->listSearchable(),
             $finder->makeSortItems(),
             $finder->makeStatusItems(),
+            $finder->clearLink(),
         );
     }
 
@@ -173,6 +174,16 @@ abstract class Finder
     /** The name of the route which this Finder links to, such as "orders.index" */
     abstract public function route(): string;
 
+    public function clearLink(): string
+    {
+        return $this->makeLink(
+            static::DEFAULT_FILTER,
+            static::DEFAULT_STATUS,
+            static::DEFAULT_SORT,
+            '',
+        );
+    }
+
     /** Makes a FindLink object based on the current filter */
     protected function makeFilterItems(): array
     {
@@ -181,7 +192,7 @@ abstract class Finder
         foreach ($items as $key => $label) {
             $items[] = new FinderLink(
                 $label,
-                $this->makeLink($key, null, null),
+                $this->makeLink($key, null, null, null),
             );
         }
 
@@ -196,7 +207,7 @@ abstract class Finder
         foreach ($items as $key => $label) {
             $items[] = new FinderLink(
                 $label,
-                $this->makeLink(null, null, $key),
+                $this->makeLink(null, null, $key, null),
             );
         }
 
@@ -211,7 +222,7 @@ abstract class Finder
         foreach ($items as $key => $label) {
             $items[] = new FinderLink(
                 $label,
-                $this->makeLink(null, $key, null),
+                $this->makeLink(null, $key, null, null),
             );
         }
 
@@ -223,12 +234,13 @@ abstract class Finder
         ?string $filter,
         ?string $status,
         ?string $sort,
+        ?string $search,
     ): string {
         return URL::route(
             $this->route(),
             [
                 static::KEY_FILTER => $filter ?? $this->currentFilter,
-                static::KEY_SEARCH => $this->currentSearch,
+                static::KEY_SEARCH => $search ?? $this->currentSearch,
                 static::KEY_SORT => $sort ?? $this->currentSort,
                 static::KEY_STATUS => $status ?? $this->currentStatus,
             ],
