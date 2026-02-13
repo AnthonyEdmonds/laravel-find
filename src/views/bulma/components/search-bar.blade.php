@@ -23,14 +23,12 @@
                         />
 
                         @error('search')
-                        <p class="help is-danger">{{ $message }}</p>
+                            <p class="help is-danger">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="control">
-                        <button class="button is-primary">
-                            Search
-                        </button>
+                        <button class="button is-primary">Search</button>
                     </div>
                 </div>
 
