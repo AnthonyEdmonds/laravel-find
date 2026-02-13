@@ -14,21 +14,19 @@
                 @csrf
                 @method('get')
 
-                <div class="field">
+                <div class="field has-addons">
                     <div class="control">
                         <input
                             class="input"
                             name="search"
                             value="{{ old('search', $finder->currentSearch) }}"
                         />
+
+                        @error('search')
+                        <p class="help is-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    @error('search')
-                        <p class="help is-danger">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div class="field">
                     <div class="control">
                         <button class="button is-primary">
                             Search
@@ -36,8 +34,8 @@
                     </div>
                 </div>
 
-                <p class="is-size-7">You may search by:</p>
-                <ul>
+                <p class="is-size-7 mb-1">You may search by:</p>
+                <ul class="mt-0">
                     @foreach($finder->searchable as $label)
                         <li class="is-size-7">{{ $label }}</li>
                     @endforeach
