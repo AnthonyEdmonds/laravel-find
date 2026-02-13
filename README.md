@@ -14,7 +14,9 @@ Add this library using `composer require anthonyedmonds/laravel-find`.
 
 The service provider will be automatically registered.
 
-To customise the search bar, export it using `php artisan vendor:publish --provider="AnthonyEdmonds\LaravelFind\FindServiceProvider"`
+Publish the config file using `php artisan vendor:publish --tag=laravel-find-config"`
+
+To customise the search bar component, export it using `php artisan vendor:publish --tag=laravel-find-views`
 
 ## How does this work?
 
@@ -27,6 +29,17 @@ The search results and filters can then be provided to the user via the `FinderO
 The provided search bar template gives you an idea of how to present the various filters on the UI.
 
 `Finder` writes the last used search term and filters to the session, so that the page will remain as expected between page loads.
+
+## Configuration
+
+### Template
+
+Set the `template` key in `config/laravel-find.php` to change the templates used when calling `<x-laravel-find::search-bar />`.
+
+The following templates are provided for out-of-the-box finding:
+
+* `default` => Unformatted; a good basis for full customisation
+* `govuk` => Designed for use with the [GOV.UK Laravel](https://github.com/AnthonyEdmonds/govuk-laravel) library
 
 ## Upgrading from v5
 
