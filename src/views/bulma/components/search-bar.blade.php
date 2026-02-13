@@ -26,13 +26,6 @@
                     @error('search')
                         <p class="help is-danger">{{ $message }}</p>
                     @enderror
-
-                    <p class="help">You may search by:</p>
-                    <ul>
-                        @foreach($finder->searchable as $label)
-                            <li class="help">{{ $label }}</li>
-                        @endforeach
-                    </ul>
                 </div>
 
                 <div class="field">
@@ -42,6 +35,13 @@
                         </button>
                     </div>
                 </div>
+
+                <p class="is-size-7">You may search by:</p>
+                <ul>
+                    @foreach($finder->searchable as $label)
+                        <li class="is-size-7">{{ $label }}</li>
+                    @endforeach
+                </ul>
             </form>
         </div>
 
