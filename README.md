@@ -6,7 +6,7 @@
 ![PHP version](.github/php.svg)
 ![Tests status](.github/tests.svg)
 
-Find and filter models with persistant memory of the users last used parameters.
+Find and filter models with persistent memory of the user's last used parameters.
 
 ## Installation
 
@@ -40,6 +40,7 @@ The following templates are provided for out-of-the-box finding:
 
 * `default` => Unformatted; a good basis for full customisation
 * `govuk` => Designed for use with the [GOV.UK Laravel](https://github.com/AnthonyEdmonds/govuk-laravel) library
+* `bulma` => Designed for use with the [Bulma](https://bulma.io) CSS framework
 
 ## Upgrading from v5
 
