@@ -206,6 +206,10 @@ abstract class Finder
         $items = [];
 
         foreach ($filters as $key => $label) {
+            if ($key === $this->currentFilter) {
+                continue;
+            }
+
             $items[] = new FinderLink(
                 $label,
                 $this->makeLink($key, null, null, null),
@@ -222,6 +226,10 @@ abstract class Finder
         $items = [];
 
         foreach ($sorts as $key => $label) {
+            if ($key === $this->currentSort) {
+                continue;
+            }
+
             $items[] = new FinderLink(
                 $label,
                 $this->makeLink(null, null, $key, null),
@@ -238,6 +246,10 @@ abstract class Finder
         $items = [];
 
         foreach ($states as $key => $label) {
+            if ($key === $this->currentStatus) {
+                continue;
+            }
+
             $items[] = new FinderLink(
                 $label,
                 $this->makeLink(null, $key, null, null),
