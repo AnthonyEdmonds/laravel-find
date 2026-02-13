@@ -11,7 +11,12 @@
                     name="search"
                     value="{{ old('search', $finder->currentSearch) }}"
                 />
+                <button>Search</button>
             </form>
+
+            @error('search')
+                <p>{{ $message }}</p>
+            @enderror
 
             <p><small>You may search by:</small></p>
             <ul>
