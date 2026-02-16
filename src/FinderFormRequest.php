@@ -9,6 +9,7 @@ class FinderFormRequest extends FormRequest
 {
     public Finder $finder;
 
+    /** @codeCoverageIgnore */
     public function authorize(): bool
     {
         return true;
