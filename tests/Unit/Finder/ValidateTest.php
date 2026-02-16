@@ -15,8 +15,6 @@ class ValidateTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-
     }
 
     public function testPasses(): void
