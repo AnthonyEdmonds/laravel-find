@@ -3,6 +3,7 @@
 namespace AnthonyEdmonds\LaravelFind;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -57,6 +58,8 @@ abstract class Finder
     /** Loads the current find parts and any authenticated model */
     final public function __construct()
     {
+        $this->validate();
+
         $this->user = Auth::user();
         $this->currentFilter = static::loadTerm(static::KEY_FILTER, static::DEFAULT_FILTER);
         $this->currentSearch = static::loadTerm(static::KEY_SEARCH, '');
@@ -74,6 +77,38 @@ abstract class Finder
         Session::put($key, $value);
 
         return $value;
+    }
+
+    /**
+     * Validation
+     * ----------
+     * Make sure people are only using the filters, searches, and sorts they should be
+     */
+
+    /**
+     * Specify the FormRequest to use for validating Finder inputs
+     * @returns class-string<FormRequest>
+     */
+    public function formRequest(): string
+    {
+        return FinderFormRequest::class;
+    }
+
+    /** Validate request inputs */
+    public function validate(): void
+    {
+        $formRequestClass = $this->formRequest();
+        $formRequest = new $formRequestClass([
+            static::KEY_FILTER => request()->input(static::KEY_FILTER),
+            static::KEY_SEARCH => request()->input(static::KEY_SEARCH),
+            static::KEY_SORT => request()->input(static::KEY_SORT),
+            static::KEY_STATUS => request()->input(static::KEY_STATUS),
+        ]);
+        $formRequest->finder = $this;
+
+        $formRequest->validate(
+            $formRequest->rules(),
+        );
     }
 
     /**
@@ -153,7 +188,7 @@ abstract class Finder
 
     /**
      * Lists
-     * ---------
+     * -----
      * These methods provide the labels for each filter, status, and sort on the UI
      */
 
@@ -171,7 +206,7 @@ abstract class Finder
 
     /**
      * Clear
-     * ---------
+     * -----
      * These methods customise the "clear filters" button
      */
 
