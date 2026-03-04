@@ -36,7 +36,7 @@ class ValidateTest extends TestCase
     public function testFails(): void
     {
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('The selected filter is invalid. (and 3 more errors)');
+        $this->expectExceptionMessage('The search field must be a string. (and 3 more errors)');
 
         request()->query->set(TestFinder::KEY_FILTER, 'aosdk');
         request()->query->set(TestFinder::KEY_SEARCH, 213);
