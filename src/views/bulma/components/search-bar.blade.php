@@ -41,38 +41,47 @@
             </form>
         </div>
 
-        <div class="column is-one-quarter">
-            <h3>Filters</h3>
-            <ul class="no-decoration">
-                @foreach($finder->filters as $item)
-                    <li>
-                        <a href="{{ $item->link }}">{{ $item->label }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        @empty($finder->filters)
+        @else
+            <div class="column is-one-quarter">
+                <h3>Filters</h3>
+                <ul class="no-decoration">
+                    @foreach($finder->filters as $item)
+                        <li>
+                            <a href="{{ $item->link }}">{{ $item->label }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endempty
 
-        <div class="column is-one-quarter">
-            <h3>Statuses</h3>
-            <ul class="no-decoration">
-                @foreach($finder->statuses as $item)
-                    <li>
-                        <a href="{{ $item->link }}">{{ $item->label }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        @empty($finder->statuses)
+        @else
+            <div class="column is-one-quarter">
+                <h3>Statuses</h3>
+                <ul class="no-decoration">
+                    @foreach($finder->statuses as $item)
+                        <li>
+                            <a href="{{ $item->link }}">{{ $item->label }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endempty
 
-        <div class="column is-one-quarter">
-            <h3>Sorts</h3>
-            <ul class="no-decoration">
-                @foreach($finder->sorts as $item)
-                    <li>
-                        <a href="{{ $item->link }}">{{ $item->label }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        @empty($finder->sorts)
+        @else
+            <div class="column is-one-quarter">
+                <h3>Sorts</h3>
+                <ul class="no-decoration">
+                    @foreach($finder->sorts as $item)
+                        <li>
+                            <a href="{{ $item->link }}">{{ $item->label }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endempty
     </div>
 
     <div class="mt-4">

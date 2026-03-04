@@ -19,38 +19,47 @@
         </x-govuk::ul>
     </div>
 
-    <div class="govuk-grid-column-one-quarter">
-        <x-govuk::h2>Filters</x-govuk::h2>
-        <x-govuk::ul>
-            @foreach($finder->filters as $item)
-                <li>
-                    <x-govuk::a href="{{ $item->link }}">{{ $item->label }}</x-govuk::a>
-                </li>
-            @endforeach
-        </x-govuk::ul>
-    </div>
+    @empty($finder->filters)
+    @else
+        <div class="govuk-grid-column-one-quarter">
+            <x-govuk::h2>Filters</x-govuk::h2>
+            <x-govuk::ul>
+                @foreach($finder->filters as $item)
+                    <li>
+                        <x-govuk::a href="{{ $item->link }}">{{ $item->label }}</x-govuk::a>
+                    </li>
+                @endforeach
+            </x-govuk::ul>
+        </div>
+    @endempty
 
-    <div class="govuk-grid-column-one-quarter">
-        <x-govuk::h2>Statuses</x-govuk::h2>
-        <x-govuk::ul>
-            @foreach($finder->statuses as $item)
-                <li>
-                    <x-govuk::a href="{{ $item->link }}">{{ $item->label }}</x-govuk::a>
-                </li>
-            @endforeach
-        </x-govuk::ul>
-    </div>
+    @empty($finder->statuses)
+    @else
+        <div class="govuk-grid-column-one-quarter">
+            <x-govuk::h2>Statuses</x-govuk::h2>
+            <x-govuk::ul>
+                @foreach($finder->statuses as $item)
+                    <li>
+                        <x-govuk::a href="{{ $item->link }}">{{ $item->label }}</x-govuk::a>
+                    </li>
+                @endforeach
+            </x-govuk::ul>
+        </div>
+    @endempty
 
-    <div class="govuk-grid-column-one-quarter">
-        <x-govuk::h2>Sorts</x-govuk::h2>
-        <x-govuk::ul>
-            @foreach($finder->sorts as $item)
-                <li>
-                    <x-govuk::a href="{{ $item->link }}">{{ $item->label }}</x-govuk::a>
-                </li>
-            @endforeach
-        </x-govuk::ul>
-    </div>
+    @empty($finder->sorts)
+    @else
+        <div class="govuk-grid-column-one-quarter">
+            <x-govuk::h2>Sorts</x-govuk::h2>
+            <x-govuk::ul>
+                @foreach($finder->sorts as $item)
+                    <li>
+                        <x-govuk::a href="{{ $item->link }}">{{ $item->label }}</x-govuk::a>
+                    </li>
+                @endforeach
+            </x-govuk::ul>
+        </div>
+    @endempty
 </div>
 
 <div class="govuk-grid-row">
