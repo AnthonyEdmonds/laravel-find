@@ -26,38 +26,47 @@
             </ul>
         </div>
 
-        <div>
-            <h2>Filters</h2>
-            <ul>
-                @foreach($finder->filters as $item)
-                    <li>
-                        <a href="{{ $item->link }}">{{ $item->label }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        @empty($finder->filters)
+        @else
+            <div>
+                <h2>Filters</h2>
+                <ul>
+                    @foreach($finder->filters as $item)
+                        <li>
+                            <a href="{{ $item->link }}">{{ $item->label }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endempty
 
-        <div>
-            <h2>Statuses</h2>
-            <ul>
-                @foreach($finder->statuses as $item)
-                    <li>
-                        <a href="{{ $item->link }}">{{ $item->label }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        @empty($finder->statuses)
+        @else
+            <div>
+                <h2>Statuses</h2>
+                <ul>
+                    @foreach($finder->statuses as $item)
+                        <li>
+                            <a href="{{ $item->link }}">{{ $item->label }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endempty
 
-        <div>
-            <h2>Sorts</h2>
-            <ul>
-                @foreach($finder->sorts as $item)
-                    <li>
-                        <a href="{{ $item->link }}">{{ $item->label }}</a>
-                    </li>
-                @endforeach
-            </ul>
-        </div>
+        @empty($finder->sorts)
+        @else
+            <div>
+                <h2>Sorts</h2>
+                <ul>
+                    @foreach($finder->sorts as $item)
+                        <li>
+                            <a href="{{ $item->link }}">{{ $item->label }}</a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endempty
     </div>
 
     <div>
