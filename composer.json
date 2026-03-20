@@ -15,14 +15,14 @@
     ],
     "require": {
         "php": "^8",
-        "illuminate/support": "^12"
+        "illuminate/support": "^13"
     },
     "require-dev": {
         "brianium/paratest": "^7",
         "larastan/larastan": "^3",
         "laravel/pint": "^1",
-        "networkrailbusinesssystems/badges": "^1",
-        "orchestra/testbench": "^10",
+        "networkrailbusinesssystems/badges": "dev-laravel-13",
+        "orchestra/testbench": "^11",
         "phpunit/phpunit": "^12"
     },
     "autoload": {
