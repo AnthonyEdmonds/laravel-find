@@ -29,13 +29,13 @@ class LoadTermTest extends TestCase
 
         $this->assertEquals(
             'potato',
-            Session::get('test'),
+            Session::get('grim_test'),
         );
     }
 
     public function testFromSession(): void
     {
-        Session::put('test', 'potato');
+        Session::put('grim_test', 'potato');
 
         $this->assertEquals(
             'potato',
@@ -55,7 +55,7 @@ class LoadTermTest extends TestCase
 
     public function testDefaultSession(): void
     {
-        Session::put('test', null);
+        Session::put('grim_test', null);
 
         $this->assertEquals(
             'carrot',

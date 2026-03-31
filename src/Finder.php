@@ -14,8 +14,17 @@ use Illuminate\Support\Str;
 abstract class Finder
 {
     /**
+     * Finder Key
+     * ----------
+     * Uniquely identify this Finder
+     * or share filters between Finders using the same key
+     */
+
+    public const string FINDER_KEY = '';
+
+    /**
      * Default constants
-     * --------------
+     * -----------------
      * Set the default value for each find part
      */
 
@@ -27,7 +36,7 @@ abstract class Finder
 
     /**
      * Key constants
-     * ----------
+     * -------------
      * Customise the session keys for each find part
      */
 
@@ -70,11 +79,13 @@ abstract class Finder
     /** Retrieves the current term from the request, session, or default */
     public function loadTerm(string $key, string $default): string
     {
+        $sessionKey = static::FINDER_KEY . '_' . $key;
+
         $value = Request::has($key) === true
             ? Request::get($key) ?? $default
-            : Session::get($key) ?? $default;
+            : Session::get($sessionKey) ?? $default;
 
-        Session::put($key, $value);
+        Session::put($sessionKey, $value);
 
         return $value;
     }
