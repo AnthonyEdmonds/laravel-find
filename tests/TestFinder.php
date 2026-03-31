@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class TestFinder extends Finder
 {
+    public const string FINDER_KEY = 'grim';
+
     public const string DEFAULT_FILTER = 'author';
 
     public const string DEFAULT_STATUS = 'open';
